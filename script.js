@@ -4,14 +4,16 @@
 
 // Intersection Observer for scroll-triggered animations
 const observerOptions = {
-    threshold: 0.3,
-    rootMargin: '0px 0px -100px 0px'
+    threshold: 0.5,
+    rootMargin: '-10% 0px -10% 0px'
 };
 
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+        } else {
+            entry.target.classList.remove('visible');
         }
     });
 }, observerOptions);
@@ -60,15 +62,29 @@ document.addEventListener('keydown', (e) => {
     const galleryItems = document.querySelectorAll('.gallery-item');
     const currentIndex = Array.from(galleryItems).findIndex(item => {
         const rect = item.getBoundingClientRect();
-        return rect.top >= 0 && rect.top < window.innerHeight / 2;
+        return rect.top >= -50 && rect.top < window.innerHeight / 2;
     });
 
     if (e.key === 'ArrowDown' && currentIndex < galleryItems.length - 1) {
         e.preventDefault();
-        galleryItems[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+        galleryItems[currentIndex + 1].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
     } else if (e.key === 'ArrowUp' && currentIndex > 0) {
         e.preventDefault();
-        galleryItems[currentIndex - 1].scrollIntoView({ behavior: 'smooth' });
+        galleryItems[currentIndex - 1].scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    } else if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        if (currentIndex < galleryItems.length - 1) {
+            galleryItems[currentIndex + 1].scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     }
 });
 
