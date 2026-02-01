@@ -1,0 +1,293 @@
+/* ========================================
+   VARIABLES & RESET
+   ======================================== */
+:root {
+    --text-color: #ffffff;
+    --bg-dark: rgba(0, 0, 0, 0.7);
+    --accent-color: #00d4ff;
+    --transition-speed: 0.8s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    overflow-x: hidden;
+    background: #000;
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-color), #0099cc);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #00ffff, var(--accent-color));
+}
+
+/* ========================================
+   SCROLL INDICATOR
+   ======================================== */
+.scroll-indicator {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
+    animation: fadeInOut 3s infinite;
+    pointer-events: none;
+}
+
+.scroll-indicator .arrow {
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+.scroll-indicator p {
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px);
+    }
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   GALLERY CONTAINER
+   ======================================== */
+.gallery-container {
+    width: 100%;
+}
+
+/* ========================================
+   GALLERY ITEMS
+   ======================================== */
+.gallery-item {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    overflow: hidden;
+}
+
+/* Background Blur Effect */
+.background-blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(20px) brightness(0.4);
+    transform: scale(1.1);
+    transition: all var(--transition-speed) ease;
+}
+
+.gallery-item.visible .background-blur {
+    filter: blur(20px) brightness(0.5);
+    transform: scale(1);
+}
+
+/* Content Container */
+.content {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 90%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* ========================================
+   IMAGE CONTAINER & POSITIONING
+   ======================================== */
+.image-container {
+    width: 100%;
+    max-width: 800px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item.visible .image-container {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.image-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.image-container:hover img {
+    transform: scale(1.05);
+}
+
+/* Position Variations */
+.gallery-item[data-position="left"] .content {
+    align-items: flex-start;
+}
+
+.gallery-item[data-position="right"] .content {
+    align-items: flex-end;
+}
+
+.gallery-item[data-position="center"] .content {
+    align-items: center;
+}
+
+/* ========================================
+   DESCRIPTION STYLING
+   ======================================== */
+.description {
+    max-width: 800px;
+    background: var(--bg-dark);
+    padding: 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+}
+
+.gallery-item.visible .description {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.description h2 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 15px;
+    color: var(--accent-color);
+    letter-spacing: 1px;
+}
+
+.description p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 768px) {
+    .content {
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .image-container {
+        max-width: 100%;
+    }
+
+    .description {
+        padding: 20px;
+    }
+
+    .description h2 {
+        font-size: 1.8rem;
+    }
+
+    .description p {
+        font-size: 1rem;
+    }
+
+    .scroll-indicator {
+        bottom: 20px;
+    }
+
+    .scroll-indicator .arrow {
+        font-size: 1.5rem;
+    }
+
+    .scroll-indicator p {
+        font-size: 0.8rem;
+    }
+
+    /* Force center alignment on mobile */
+    .gallery-item[data-position="left"] .content,
+    .gallery-item[data-position="right"] .content {
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .description h2 {
+        font-size: 1.5rem;
+    }
+
+    .description p {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .content {
+        padding: 15px;
+    }
+}
+
+/* ========================================
+   LOADING OPTIMIZATION
+   ======================================== */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
